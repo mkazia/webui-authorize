@@ -1,0 +1,211 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.cloudera.cdh</groupId>
+        <artifactId>cdh-root</artifactId>
+        <version>5.12.0</version>
+    </parent>
+
+    <groupId>com.cloudera.ps</groupId>
+    <artifactId>webui-authorize</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>Hadoop Web UI Authorize Plugin</name>
+    <url>http://www.cloudera.com</url>
+
+    <properties>
+        <javaVersion>1.7</javaVersion>
+        <targetJavaVersion>1.7</targetJavaVersion>
+
+        <!-- to be able to run a single test case from the main project -->
+        <failIfNoTests>false</failIfNoTests>
+
+        <test.timeout>5400</test.timeout>
+
+        <!-- platform encoding override -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+        <maven.test.java.opts>-Xmx1024m -da -XX:MaxPermSize=512m</maven.test.java.opts>
+        <maven.javadoc.opts></maven.javadoc.opts>
+
+        <hadoop.version>${cdh.hadoop.version}</hadoop.version>
+
+        <clover.license>/home/jenkins/tools/clover/latest/lib/clover.license</clover.license>
+        <!--
+        This is required while we support a a pre 0.23 version of Hadoop which does not have
+        the hadoop-auth artifact. After we phase-out pre 0.23 we can get rid of this property.
+        -->
+        <hadoop.auth.version>${cdh.hadoop.version}</hadoop.auth.version>
+
+        <curator.version>2.7.1</curator.version>
+        <log4j.version>1.2.17</log4j.version>
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-auth</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>mina-core</artifactId>
+            <groupId>org.apache.mina</groupId>
+            <version>1.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- ApacheDS needed for LDAP unit tests -->
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-server-unit</artifactId>
+            <version>1.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>cdh.repo</id>
+            <name>Cloudera Repositories</name>
+            <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>cdh.snapshots.repo</id>
+            <name>Cloudera Snapshots Repository</name>
+            <url>https://repository.cloudera.com/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>apache.snapshots.repo</id>
+            <name>Apache Snapshots Repository</name>
+            <url>https://repository.apache.org/content/groups/snapshots</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>datanucleus</id>
+            <name>Datanucleus</name>
+            <url>http://www.datanucleus.org/downloads/maven2</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>cdh.releases.repo</id>
+            <name>CDH Releases Repository</name>
+            <url>https://repository.cloudera.com/content/groups/cdh-releases-rcs</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>java.net repository</id>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>cdh.thirdparty.repo</id>
+            <name>Cloudera Third Party Repository</name>
+            <url>https://repository.cloudera.com/content/repositories/third-party</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
+
+    <build>
+        <finalName>webui-authorize</finalName>
+        <plugins>
+            <!-- Make the hadoop-login.jar too -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <configuration>
+                    <excludeSubProjects>false</excludeSubProjects>
+                    <excludes>
+                        <!-- excluding all as the root POM does the full check-->
+                        <exclude>**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>../src/main/assemblies/empty.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
