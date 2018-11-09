@@ -1,7 +1,7 @@
 # webui-authorize
 Restrict Hadoop WebUI to a authorized users and groups defined by ACL
 
-Provides class com.cloudera.ps.authentication.WebUIAuthorizationHandler that implementats org.apache.hadoop.security.authentication.serverAltKerberosAuthenticationHandler. The alternate authentication method offered by this class delegates to the parent class org.apache.hadoop.security.authentication.server.KerberosAuthenticationHandler to authenticate the user with SPENGO. Once Authenticated, it checks if the user is authorized against a configured ACL.
+Provides class com.cloudera.ps.authentication.WebUIAuthorizationHandler that implementats org.apache.hadoop.security.authentication.server.KerberosAuthenticationHandler. The authenticate method offered by this class delegates to the parent class org.apache.hadoop.security.authentication.server.KerberosAuthenticationHandler to authenticate the user with SPENGO. Once Authenticated, it checks if the user is authorized against a configured ACL.
 
 ## Enabling WebUIAuthorizationHandler on Hadoop Web UIs
 * Stop Hadoop
