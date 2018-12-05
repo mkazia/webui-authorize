@@ -40,15 +40,13 @@ import java.util.Properties;
  */
 
 public class WebUIAuthorizationHandler extends KerberosAuthenticationHandler {
-    private static final String AUTHORIZED_ACL = "alt-kerberos.authorize.acl";
-    private static final String AUTHORIZED_ACL_DEFAULT = "*";
     private static final Logger LOG = LoggerFactory.getLogger(WebUIAuthorizationHandler.class);
     private AccessControlList authorizedAcl;
 
     /**
      * Constant that identifies the authentication mechanism.
      */
-    private static final String TYPE = "alt-kerberos";
+    private static final String TYPE = "spnego-authorize";
 
     /**
      * Constant for the configuration property that indicates which user agents
@@ -59,14 +57,21 @@ public class WebUIAuthorizationHandler extends KerberosAuthenticationHandler {
     private static final String NON_BROWSER_USER_AGENTS_DEFAULT =
             "java,curl,wget,perl,python";
 
+    /**
+     * Constant for the configuration property that indicates which user agents
+     * are not considered browsers (comma separated)
+     */
+    private static final String AUTHORIZED_ACL = TYPE + ".authorize.acl";
+    private static final String AUTHORIZED_ACL_DEFAULT = "*";
+
     private String[] nonBrowserUserAgents;
 
     /**
      * Returns the authentication type of the authentication handler,
-     * 'alt-kerberos'.
+     * 'spnego-authorize'.
      *
      * @return the authentication type of the authentication handler,
-     * 'alt-kerberos'.
+     * 'spnego-authorize'.
      */
     @Override
     public String getType() {
@@ -124,10 +129,9 @@ public class WebUIAuthorizationHandler extends KerberosAuthenticationHandler {
      * will be used.
      * <p>
      * A User-Agent String is considered to be a browser if it does not contain
-     * any of the values from alt-kerberos.non-browser.user-agents; the default
+     * any of the values from spnego-authorize.non-browser.user-agents; the default
      * behavior is to consider everything a browser unless it contains one of:
-     * "java", "curl", "wget", or "perl".  Subclasses can optionally override
-     * this method to use different behavior.
+     * "java", "curl", "wget", or "perl".
      *
      * @param userAgent The User-Agent String, or null if there isn't one
      * @return true if the User-Agent String refers to a browser, false if not
