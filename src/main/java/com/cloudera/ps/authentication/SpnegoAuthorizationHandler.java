@@ -39,8 +39,8 @@ import java.util.Properties;
  * This class borrows most of its functionality from  {@Link AltKerberosAuthenticationHandler}
  */
 
-public class WebUIAuthorizationHandler extends KerberosAuthenticationHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(WebUIAuthorizationHandler.class);
+public class SpnegoAuthorizationHandler extends KerberosAuthenticationHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(SpnegoAuthorizationHandler.class);
     private AccessControlList authorizedAcl;
 
     /**
